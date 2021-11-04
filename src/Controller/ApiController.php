@@ -11,69 +11,52 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\RouterInterface;
 
 class ApiController
 {
     private array $products;
 
     /**
-     * @param Request         $request
-     * @param RouterInterface $router
+     * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
-    #[Route('/api', name: 'resource_list', ),]
-    public function getResourceList(Request $request, RouterInterface $router): Response
+    #[Route('/api', name: 'resource_list')]
+    public function getResourceList(Request $request): JsonResponse
     {
-        if (!$request->headers->get('content-type')) {
-            throw new UnsupportedMediaTypeHttpException('Your request must contain a Content-type header.');
-        }
+        $this->isRequestContentTypeJson($request);
 
-        $resources = [];
-        $routes = $router->getRouteCollection()->all();
-        foreach ($routes as $route) {
-            if (str_contains($request->getUriForPath($route->getPath()), '/api')) {
-                $resources[] = str_replace('{_locale}',
-                    $request->get('_locale'),
-                    $request->getUriForPath($route->getPath())
-                );
+        $products = $this->getAllProducts();
+        function generateList($request, $products): \Generator
+        {
+            yield $request->getUri();
+            yield $request->getUri().'/my-info';
+            foreach ($products as $product) {
+                yield $request->getUri().'/product_'.mb_substr($product['sku'], -3);
             }
         }
 
-        $productCount = \count($this->getAllProducts());
-        foreach ($resources as $resource) {
-            if (str_contains($resource, '{_sku}')) {
-                for ($i = 0; $i < $productCount; ++$i) {
-                    $resources[] = str_replace('{_sku}',
-                        mb_substr($this->products[$i]['sku'], -4),
-                        $resource
-                    );
-                }
-                unset($resources[array_search($resource, $resources, true)]);
-                $resources = array_values($resources);
-            }
-        }
+        $result = iterator_to_array(generateList($request, $products));
+        $response = new JsonResponse($result);
+        $response->setEncodingOptions(\JSON_UNESCAPED_SLASHES);
 
-        return new Response(json_encode($resources, \JSON_UNESCAPED_SLASHES));
+        return $response;
     }
 
     /**
      * @param Request $request
      * @param string  $_sku
      *
-     * @return Response
+     * @return JsonResponse
      */
     #[Route('/api/product{_sku}', name: 'product_info')]
-    public function getProductInfo(Request $request, string $_sku): Response
+    public function getProductInfo(Request $request, string $_sku): JsonResponse
     {
-        if (!$request->headers->get('content-type')) {
-            throw new UnsupportedMediaTypeHttpException('Your request must contain a Content-type header.');
-        }
+        $this->isRequestContentTypeJson($request);
 
         $currentProduct = [];
         $this->getAllProducts();
@@ -84,35 +67,47 @@ class ApiController
             }
         }
 
-        return new Response(json_encode($currentProduct, \JSON_UNESCAPED_UNICODE));
+        $response = new JsonResponse($currentProduct);
+        $response->setEncodingOptions(\JSON_UNESCAPED_UNICODE);
+
+        return $response;
     }
 
     /**
      * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
     #[Route('/api/my-info', name: 'client_info')]
-    public function getClientInfo(Request $request): Response
+    public function getClientInfo(Request $request): JsonResponse
     {
-        if (!$request->headers->get('content-type')) {
-            throw new UnsupportedMediaTypeHttpException('Your request must contain a Content-type header.');
-        }
+        $this->isRequestContentTypeJson($request);
 
         $clientInfo = [];
-        $clientInfo['ip'] = $_SERVER['REMOTE_ADDR'];
-        $clientInfo['language'] = mb_substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5);
+        $clientInfo['ip'] = $request->getClientIp();
+        $clientInfo['language'] = $request->getPreferredLanguage();
 
         $browserInfo = get_browser(null, true);
         $clientInfo['browser'] = $browserInfo['browser'];
 
-        $result = json_encode($clientInfo).\PHP_EOL;
+        $response = new JsonResponse($clientInfo);
+        $response->setEncodingOptions(\JSON_UNESCAPED_UNICODE);
 
         $handle = fopen('../public/resources.txt', 'a');
-        fwrite($handle, $result);
+        fwrite($handle, $response->getContent().\PHP_EOL);
         fclose($handle);
 
-        return new Response($result);
+        return $response;
+    }
+
+    /**
+     * @throws UnsupportedMediaTypeHttpException
+     */
+    private function isRequestContentTypeJson(Request $request)
+    {
+        if (!('application/json' === $request->headers->get('content-type'))) {
+            throw new UnsupportedMediaTypeHttpException("Your request must contain a Content-type header with the value 'application/json'.");
+        }
     }
 
     private function getAllProducts(): array
