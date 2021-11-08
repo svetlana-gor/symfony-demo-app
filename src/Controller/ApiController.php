@@ -13,8 +13,8 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ApiController
 {
@@ -28,8 +28,6 @@ class ApiController
     #[Route('/api', name: 'resource_list')]
     public function getResourceList(Request $request): JsonResponse
     {
-        $this->isRequestContentTypeJson($request);
-
         $products = $this->getAllProducts();
         function generateList($request, $products): \Generator
         {
@@ -48,21 +46,21 @@ class ApiController
     }
 
     /**
-     * @param Request $request
-     * @param string  $_sku
+     * @param string              $_sku
+     * @param TranslatorInterface $translator
      *
      * @return JsonResponse
      */
     #[Route('/api/product{_sku}', name: 'product_info')]
-    public function getProductInfo(Request $request, string $_sku): JsonResponse
+    public function getProductInfo(string $_sku, TranslatorInterface $translator): JsonResponse
     {
-        $this->isRequestContentTypeJson($request);
-
         $currentProduct = [];
         $this->getAllProducts();
         foreach ($this->products as $product) {
             if (mb_substr($product['sku'], -4) === $_sku) {
-                $currentProduct = $product;
+                array_walk($product, function ($item, $key) use (&$currentProduct, $translator) {
+                    $currentProduct[$translator->trans($key)] = $item;
+                });
                 break;
             }
         }
@@ -81,8 +79,6 @@ class ApiController
     #[Route('/api/my-info', name: 'client_info')]
     public function getClientInfo(Request $request): JsonResponse
     {
-        $this->isRequestContentTypeJson($request);
-
         $clientInfo = [];
         $clientInfo['ip'] = $request->getClientIp();
         $clientInfo['language'] = $request->getPreferredLanguage();
@@ -98,16 +94,6 @@ class ApiController
         fclose($handle);
 
         return $response;
-    }
-
-    /**
-     * @throws UnsupportedMediaTypeHttpException
-     */
-    private function isRequestContentTypeJson(Request $request)
-    {
-        if (!('application/json' === $request->headers->get('content-type'))) {
-            throw new UnsupportedMediaTypeHttpException("Your request must contain a Content-type header with the value 'application/json'.");
-        }
     }
 
     private function getAllProducts(): array
