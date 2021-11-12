@@ -20,11 +20,6 @@ class ApiController
 {
     private array $products;
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     #[Route('/api', name: 'resource_list')]
     public function getResourceList(Request $request): JsonResponse
     {
@@ -45,12 +40,6 @@ class ApiController
         return $response;
     }
 
-    /**
-     * @param string              $_sku
-     * @param TranslatorInterface $translator
-     *
-     * @return JsonResponse
-     */
     #[Route('/api/product{_sku}', name: 'product_info')]
     public function getProductInfo(string $_sku, TranslatorInterface $translator): JsonResponse
     {
@@ -58,9 +47,9 @@ class ApiController
         $this->getAllProducts();
         foreach ($this->products as $product) {
             if (mb_substr($product['sku'], -4) === $_sku) {
-                array_walk($product, function ($item, $key) use (&$currentProduct, $translator) {
-                    $currentProduct[$translator->trans($key)] = $item;
-                });
+                $currentProduct[$translator->trans('name')] = $product['name'];
+                $currentProduct[$translator->trans('description')] = $product['description'];
+                $currentProduct[$translator->trans('sku')] = $product['sku'];
                 break;
             }
         }
@@ -71,11 +60,6 @@ class ApiController
         return $response;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     #[Route('/api/my-info', name: 'client_info')]
     public function getClientInfo(Request $request): JsonResponse
     {

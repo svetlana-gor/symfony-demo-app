@@ -24,7 +24,7 @@ class RequestListener
         $request = $event->getRequest();
 
         if (str_contains($request->getRequestUri(), $request->getLocale().'/'.'api')) {
-            if (!('application/json' === $request->headers->get('content-type'))) {
+            if ('application/json' !== $request->headers->get('content-type')) {
                 throw new UnsupportedMediaTypeHttpException("Your request must contain a Content-type header with the value 'application/json'.");
             }
         }
