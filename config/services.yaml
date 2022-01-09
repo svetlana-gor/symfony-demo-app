@@ -33,9 +33,9 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\EventListener\RequestListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
+#    App\EventListener\RequestListener:
+#        tags:
+#            - { name: kernel.event_listener, event: kernel.request }
 
     app.channel_locator:
         class: Symfony\Component\DependencyInjection\ServiceLocator
@@ -67,7 +67,7 @@ services:
         arguments: ['@request_stack', '@Psr\Container\ContainerInterface', '@logger']
 
     app.decorating_router:
-        class: App\Service\ApiUrlGenerator
+        class: App\Service\UrlDecodeUrlDecorator
         decorates: 'router'
         arguments: ['@.inner']
 

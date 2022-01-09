@@ -2,12 +2,13 @@
 
 namespace App\Service;
 
+use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
-class ApiUrlGenerator implements RouterInterface
+class BaseUrlDecorator implements RouterInterface, WarmableInterface
 {
-    private $router;
+    protected $router;
 
     public function __construct(RouterInterface $router)
     {
@@ -16,7 +17,7 @@ class ApiUrlGenerator implements RouterInterface
 
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
-        return urldecode($this->router->generate($name, $parameters, $referenceType));
+        return $this->router->generate($name, $parameters, $referenceType);
     }
 
     public function setContext(RequestContext $context)
@@ -38,4 +39,9 @@ class ApiUrlGenerator implements RouterInterface
     {
         return $this->router->match($pathinfo);
     }
+
+    public function warmUp(string $cacheDir) {
+        // TODO: Implement warmUp() method.
+    }
+
 }
