@@ -2,6 +2,20 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
     <file source-language="en" target-language="ru" datatype="plaintext" original="file.ext">
         <body>
+            <trans-unit id="description">
+                <source>description</source>
+                <target>описание</target>
+            </trans-unit>
+            <trans-unit id="name">
+                <source>name</source>
+                <target>имя</target>
+            </trans-unit>
+            <trans-unit id="sku">
+                <source>sku</source>
+                <target>артикул</target>
+            </trans-unit>
+
+
             <trans-unit id="note">
                 <source>note</source>
                 <target>ПРИМЕЧАНИЕ</target>
