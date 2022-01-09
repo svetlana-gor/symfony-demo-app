@@ -5,8 +5,7 @@ framework:
 when@dev:
     framework:
         mailer:
-            # this disables delivery of messages entirely
-            dsn: 'null://null'
+            dsn: '%env(MAILER_DSN)%'
 
 when@test:
     framework:
