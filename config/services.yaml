@@ -63,6 +63,10 @@ services:
         arguments:
             $chatter: '@chatter'
 
+    App\Service\NotificationChannelFactory:
+        arguments: ['@request_stack', '@Psr\Container\ContainerInterface', '@logger']
+
+
     # when the service definition only contains arguments, you can omit the
     # 'arguments' key and define the arguments just below the service class
     App\EventSubscriber\CommentNotificationSubscriber:
