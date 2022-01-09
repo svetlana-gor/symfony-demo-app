@@ -66,6 +66,10 @@ services:
     App\Service\NotificationChannelFactory:
         arguments: ['@request_stack', '@Psr\Container\ContainerInterface', '@logger']
 
+    app.decorating_router:
+        class: App\Service\ApiUrlGenerator
+        decorates: 'router'
+        arguments: ['@.inner']
 
     # when the service definition only contains arguments, you can omit the
     # 'arguments' key and define the arguments just below the service class
