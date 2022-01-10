@@ -33,9 +33,9 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-#    App\EventListener\RequestListener:
-#        tags:
-#            - { name: kernel.event_listener, event: kernel.request }
+    App\EventListener\RequestListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
 
     app.channel_locator:
         class: Symfony\Component\DependencyInjection\ServiceLocator
