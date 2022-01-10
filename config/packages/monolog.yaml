@@ -1,0 +1,2 @@
+monolog:
+    channels: ['first_custom_channel', 'second_custom_channel']

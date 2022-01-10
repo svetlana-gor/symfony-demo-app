@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,12 +18,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ApiController
 {
-    private array $products;
-
     #[Route('/api', name: 'resource_list')]
     public function getResourceList(Request $request): JsonResponse
     {
-        $products = $this->getAllProducts();
+        $products = self::getAllProducts();
         function generateList($request, $products): \Generator
         {
             yield $request->getUri();
@@ -44,8 +42,8 @@ class ApiController
     public function getProductInfo(string $_sku, TranslatorInterface $translator): JsonResponse
     {
         $currentProduct = [];
-        $this->getAllProducts();
-        foreach ($this->products as $product) {
+        $products = self::getAllProducts();
+        foreach ($products as $product) {
             if (mb_substr($product['sku'], -4) === $_sku) {
                 $currentProduct[$translator->trans('name')] = $product['name'];
                 $currentProduct[$translator->trans('description')] = $product['description'];
@@ -80,7 +78,7 @@ class ApiController
         return $response;
     }
 
-    private function getAllProducts(): array
+    public static function getAllProducts(): array
     {
         $rows = array_map('str_getcsv', file('../data/products.csv'));
         $keys = array_shift($rows);
@@ -89,6 +87,6 @@ class ApiController
             $allProducts[] = array_combine($keys, $row);
         }
 
-        return $this->products = $allProducts;
+        return $allProducts;
     }
 }

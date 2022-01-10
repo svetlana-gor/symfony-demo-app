@@ -37,6 +37,40 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 
+    app.channel_locator:
+        class: Symfony\Component\DependencyInjection\ServiceLocator
+        arguments:
+            -
+                ['@monolog.logger.first_custom_channel', '@monolog.logger.second_custom_channel']
+        tags: ['container.service_locator']
+
+    app.service.logger_factory:
+        class: App\Service\LoggerFactory
+        arguments: ['@request_stack', '@app.channel_locator', '@logger']
+
+    App\Service\FileLoggerNotificationChannel:
+        arguments:
+            $logger: '@=service("app.service.logger_factory").create()'
+        tags:
+            - { name: 'monolog.logger', channel: 'monolog.logger.first_custom_channel' }
+            - { name: 'monolog.logger', channel: 'monolog.logger.second_custom_channel' }
+
+    App\Service\EmailNotificationChannel:
+        arguments:
+            $mailer: '@mailer'
+
+    App\Service\TelegramNotificationChannel:
+        arguments:
+            $chatter: '@chatter'
+
+    App\Service\NotificationChannelFactory:
+        arguments: ['@request_stack', '@Psr\Container\ContainerInterface', '@logger']
+
+    app.decorating_router:
+        class: App\Service\UrlDecodeUrlDecorator
+        decorates: 'router'
+        arguments: ['@.inner']
+
     # when the service definition only contains arguments, you can omit the
     # 'arguments' key and define the arguments just below the service class
     App\EventSubscriber\CommentNotificationSubscriber:
