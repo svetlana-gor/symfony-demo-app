@@ -26,7 +26,6 @@ class ApiNotifyController
             $result = 'Failed to send message';
         }
 
-
         return new Response($result);
     }
 }
