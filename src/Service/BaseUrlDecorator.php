@@ -40,8 +40,9 @@ class BaseUrlDecorator implements RouterInterface, WarmableInterface
         return $this->router->match($pathinfo);
     }
 
-    public function warmUp(string $cacheDir) {
-        // TODO: Implement warmUp() method.
+    public function warmUp(string $cacheDir)
+    {
+        return [];
     }
 
 }
