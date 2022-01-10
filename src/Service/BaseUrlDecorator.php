@@ -44,5 +44,4 @@ class BaseUrlDecorator implements RouterInterface, WarmableInterface
     {
         return [];
     }
-
 }
