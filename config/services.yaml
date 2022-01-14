@@ -71,6 +71,12 @@ services:
         decorates: 'router'
         arguments: ['@.inner']
 
+    App\SomeOtherModule\Command\BarHiCommand:
+        tags: ['app.command_chain']
+
+    App\SomeModule\Command\OneMoreCommand:
+        tags: ['app.command_chain']
+
     # when the service definition only contains arguments, you can omit the
     # 'arguments' key and define the arguments just below the service class
     App\EventSubscriber\CommentNotificationSubscriber:
