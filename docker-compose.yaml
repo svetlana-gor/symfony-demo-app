@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:13.3
+    container_name: db
+    environment:
+      POSTGRES_DB: symfony_demo_db
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+    volumes:
+      - db-data:/var/lib/postgresql/data:rw
+    ports:
+      - '5432:5432'
+volumes:
+  db-data:
