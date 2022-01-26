@@ -28,7 +28,7 @@ class BarHiCommand extends AbstractCustomCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $message = 'Hi from Bar!';
-        $output->writeln([$message, '']);
+        $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         $this->logger->info($message);
 
         return Command::SUCCESS;

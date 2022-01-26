@@ -37,6 +37,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 
+    App\EventListener\CommandListener:
+        tags:
+            - { name: kernel.event_listener, event: console.command }
+            - { name: kernel.event_listener, event: console.terminate }
+
+    App\Command\FooHelloCommand:
+        tags: ['app.master_command']
+
     App\SomeOtherModule\Command\BarHiCommand:
         tags: ['app.command_chain']
 

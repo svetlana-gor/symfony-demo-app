@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
  */
 class CommandCollection
 {
-    private $commandCollection;
+    private ContainerInterface $commandCollection;
 
     /**
      * @param ContainerInterface $commands Service locator with all services tagged with a specific tag.

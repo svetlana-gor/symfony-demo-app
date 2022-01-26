@@ -28,7 +28,7 @@ class OneMoreCommand extends AbstractCustomCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $message = 'This is one more command.';
-        $output->writeln([$message, '']);
+        $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         $this->logger->info($message);
 
         return Command::SUCCESS;
