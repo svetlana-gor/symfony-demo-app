@@ -88,6 +88,10 @@
                 <source>title.add_comment</source>
                 <target>Add a comment</target>
             </trans-unit>
+            <trans-unit id="title.comment_name">
+                <source>title.comment_name</source>
+                <target>Name</target>
+            </trans-unit>
             <trans-unit id="title.comment_error">
                 <source>title.comment_error</source>
                 <target>There was an error publishing your comment</target>
@@ -414,6 +418,10 @@
             <trans-unit id="help.comment_content">
                 <source>help.comment_content</source>
                 <target>Comments not complying with our Code of Conduct will be moderated.</target>
+            </trans-unit>
+            <trans-unit id="help.comment_name">
+                <source>help.comment_name</source>
+                <target>Enter your name.</target>
             </trans-unit>
 
             <trans-unit id="info.change_password">

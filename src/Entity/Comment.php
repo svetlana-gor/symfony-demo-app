@@ -76,6 +76,20 @@ class Comment
      */
     private $author;
 
+    /**
+     * @ORM\Column(type="string", length=100, nullable=true)
+     * @Assert\NotBlank(
+     *     message = "Name cannot be blank.",
+     *     groups = {"not_logged"}
+     * )
+     * @Assert\Length(
+     *     min = "3",
+     *     minMessage = "Name must be at least three characters long.",
+     *     groups = {"not_logged"}
+     * )
+     */
+    private ?string $anonymousUser;
+
     public function __construct()
     {
         $this->publishedAt = new \DateTime();
@@ -134,5 +148,17 @@ class Comment
     public function setPost(Post $post): void
     {
         $this->post = $post;
+    }
+
+    public function getAnonymousUser(): ?string
+    {
+        return $this->anonymousUser;
+    }
+
+    public function setAnonymousUser(?string $anonymousUser): self
+    {
+        $this->anonymousUser = $anonymousUser;
+
+        return $this;
     }
 }

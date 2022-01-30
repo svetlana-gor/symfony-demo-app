@@ -102,6 +102,10 @@
                 <source>title.add_comment</source>
                 <target>Добавить комментарий</target>
             </trans-unit>
+            <trans-unit id="title.comment_name">
+                <source>title.comment_name</source>
+                <target>Имя</target>
+            </trans-unit>
             <trans-unit id="title.comment_error">
                 <source>title.comment_error</source>
                 <target>Произошла ошибка во время публикации вашего комментария</target>
@@ -428,6 +432,10 @@
             <trans-unit id="help.comment_content">
                 <source>help.comment_content</source>
                 <target>Комментарии, не соответствующие нашему Кодексу поведения, будут модерироваться.</target>
+            </trans-unit>
+            <trans-unit id="help.comment_name">
+                <source>help.comment_name</source>
+                <target>Введите ваше имя.</target>
             </trans-unit>
             
             <trans-unit id="info.change_password">

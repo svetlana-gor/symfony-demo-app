@@ -27,6 +27,12 @@
             {# Render any errors for the "content" field (e.g. when a class property constraint failed) #}
             {{ form_errors(form.content) }}
 
+            {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                <i class="fa fa-user" aria-hidden="true"></i> {{ 'title.comment_name'|trans }}
+                {{ form(form.anonymousUser) }}
+                {{ form_help(form.anonymousUser) }}
+            {% endif %}
+
             {{ form_widget(form.content, {attr: {rows: 10}}) }}
             {{ form_help(form.content) }}
         </div>
