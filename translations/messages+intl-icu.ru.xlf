@@ -98,9 +98,33 @@
                 <source>title.edit_post</source>
                 <target>Изменение записи #{id, number}</target>
             </trans-unit>
+            <trans-unit id="Translations">
+                <source>Translations</source>
+                <target>Создать перевод для:</target>
+            </trans-unit>
+            <trans-unit id="Default">
+                <source>[Default]</source>
+                <target>[По умолчанию]</target>
+            </trans-unit>
+            <trans-unit id="Title">
+                <source>Title</source>
+                <target>Заголовок</target>
+            </trans-unit>
+            <trans-unit id="Summary">
+                <source>Summary</source>
+                <target>Краткое содержание</target>
+            </trans-unit>
+            <trans-unit id="Content">
+                <source>Content</source>
+                <target>Текст</target>
+            </trans-unit>
             <trans-unit id="title.add_comment">
                 <source>title.add_comment</source>
                 <target>Добавить комментарий</target>
+            </trans-unit>
+            <trans-unit id="title.comment_name">
+                <source>title.comment_name</source>
+                <target>Имя</target>
             </trans-unit>
             <trans-unit id="title.comment_error">
                 <source>title.comment_error</source>
@@ -428,6 +452,10 @@
             <trans-unit id="help.comment_content">
                 <source>help.comment_content</source>
                 <target>Комментарии, не соответствующие нашему Кодексу поведения, будут модерироваться.</target>
+            </trans-unit>
+            <trans-unit id="help.comment_name">
+                <source>help.comment_name</source>
+                <target>Введите ваше имя.</target>
             </trans-unit>
             
             <trans-unit id="info.change_password">

@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.0",
         "ext-pdo_sqlite": "*",
+        "a2lix/translation-form-bundle": "^3.2",
         "composer/package-versions-deprecated": "^1.8",
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^3.0",

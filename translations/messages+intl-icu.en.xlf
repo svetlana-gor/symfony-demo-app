@@ -84,9 +84,33 @@
                 <source>title.edit_post</source>
                 <target>Edit post #{id, number}</target>
             </trans-unit>
+            <trans-unit id="Translations">
+                <source>Translations</source>
+                <target>Translations</target>
+            </trans-unit>
+            <trans-unit id="Default">
+                <source>[Default]</source>
+                <target>[Default]</target>
+            </trans-unit>
+            <trans-unit id="Title">
+                <source>Title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="Summary">
+                <source>Summary</source>
+                <target>Summary</target>
+            </trans-unit>
+            <trans-unit id="Content">
+                <source>Content</source>
+                <target>Content</target>
+            </trans-unit>
             <trans-unit id="title.add_comment">
                 <source>title.add_comment</source>
                 <target>Add a comment</target>
+            </trans-unit>
+            <trans-unit id="title.comment_name">
+                <source>title.comment_name</source>
+                <target>Name</target>
             </trans-unit>
             <trans-unit id="title.comment_error">
                 <source>title.comment_error</source>
@@ -414,6 +438,10 @@
             <trans-unit id="help.comment_content">
                 <source>help.comment_content</source>
                 <target>Comments not complying with our Code of Conduct will be moderated.</target>
+            </trans-unit>
+            <trans-unit id="help.comment_name">
+                <source>help.comment_name</source>
+                <target>Enter your name.</target>
             </trans-unit>
 
             <trans-unit id="info.change_password">

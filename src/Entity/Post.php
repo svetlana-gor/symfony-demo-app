@@ -15,7 +15,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -33,8 +36,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
-class Post
+class Post implements TranslatableInterface
 {
+    use TranslatableTrait;
+
     /**
      * @var int
      *
@@ -42,55 +47,29 @@ class Post
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    private $title;
+    private int $id;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
-    private $slug;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="post.blank_summary")
-     * @Assert\Length(max=255)
-     */
-    private $summary;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank(message="post.blank_content")
-     * @Assert\Length(min=10, minMessage="post.too_short_content")
-     */
-    private $content;
+    private string $slug;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
      */
-    private $publishedAt;
+    private \DateTime $publishedAt;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $author;
+    private UserInterface $author;
 
     /**
      * @var Comment[]|Collection
@@ -103,7 +82,7 @@ class Post
      * )
      * @ORM\OrderBy({"publishedAt": "DESC"})
      */
-    private $comments;
+    private Collection $comments;
 
     /**
      * @var Tag[]|Collection
@@ -113,7 +92,7 @@ class Post
      * @ORM\OrderBy({"name": "ASC"})
      * @Assert\Count(max="4", maxMessage="post.too_many_tags")
      */
-    private $tags;
+    private Collection $tags;
 
     public function __construct()
     {
@@ -122,19 +101,14 @@ class Post
         $this->tags = new ArrayCollection();
     }
 
+    public function __call($method, $arguments): mixed
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title): void
-    {
-        $this->title = $title;
     }
 
     public function getSlug(): ?string
@@ -147,16 +121,6 @@ class Post
         $this->slug = $slug;
     }
 
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(?string $content): void
-    {
-        $this->content = $content;
-    }
-
     public function getPublishedAt(): \DateTime
     {
         return $this->publishedAt;
@@ -167,12 +131,12 @@ class Post
         $this->publishedAt = $publishedAt;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): ?UserInterface
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): void
+    public function setAuthor(UserInterface $author): void
     {
         $this->author = $author;
     }
@@ -193,16 +157,6 @@ class Post
     public function removeComment(Comment $comment): void
     {
         $this->comments->removeElement($comment);
-    }
-
-    public function getSummary(): ?string
-    {
-        return $this->summary;
-    }
-
-    public function setSummary(?string $summary): void
-    {
-        $this->summary = $summary;
     }
 
     public function addTag(Tag ...$tags): void

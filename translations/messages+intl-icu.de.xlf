@@ -47,6 +47,26 @@
                 <source>title.edit_post</source>
                 <target>Bearbeite Beitrag #{id, number}</target>
             </trans-unit>
+            <trans-unit id="Translations">
+                <source>Translations</source>
+                <target>Übersetzungen</target>
+            </trans-unit>
+            <trans-unit id="Default">
+                <source>[Default]</source>
+                <target>[Default]</target>
+            </trans-unit>
+            <trans-unit id="Title">
+                <source>Title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="Summary">
+                <source>Summary</source>
+                <target>Zusammenfassung</target>
+            </trans-unit>
+            <trans-unit id="Content">
+                <source>Content</source>
+                <target>Text</target>
+            </trans-unit>
             <trans-unit id="title.add_comment">
                 <source>title.add_comment</source>
                 <target>Kommentar hinzufügen</target>

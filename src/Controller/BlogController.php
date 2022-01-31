@@ -17,10 +17,13 @@ use App\Event\CommentCreatedEvent;
 use App\Form\CommentType;
 use App\Repository\PostRepository;
 use App\Repository\TagRepository;
+use App\Repository\UserRepository;
+use App\Service\AddUser\AddUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,17 +88,36 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/comment/{postSlug}/new", methods="POST", name="comment_new")
-     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @ParamConverter("post", options={"mapping": {"postSlug": "slug"}})
      *
      * NOTE: The ParamConverter mapping is required because the route parameter
      * (postSlug) doesn't match any of the Doctrine entity properties (slug).
      * See https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html#doctrine-converter
      */
-    public function commentNew(Request $request, Post $post, EventDispatcherInterface $eventDispatcher): Response
-    {
+    public function commentNew(
+        AddUser $addUser,
+        UserRepository $userRepository,
+        ParameterBagInterface $parameterBag,
+        Request $request,
+        Post $post,
+        EventDispatcherInterface $eventDispatcher
+    ): Response {
         $comment = new Comment();
-        $comment->setAuthor($this->getUser());
+
+        if ($this->getUser()) {
+            $comment->setAuthor($this->getUser());
+        } else {
+            $anonymousUserEmail = $parameterBag->get('app.anonymous_user_email');
+            $anonymousUser = $userRepository->findOneBy(['email' => $anonymousUserEmail]);
+            if (!$anonymousUser) {
+                $anonymousUser = $addUser->addAnonymousUser();
+            }
+
+            $comment->setAuthor($anonymousUser);
+
+            $commentParam = $request->get('comment');
+            $comment->setAnonymousUser($commentParam['anonymousUser']);
+        }
         $post->addComment($comment);
 
         $form = $this->createForm(CommentType::class, $comment);

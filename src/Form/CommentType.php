@@ -14,8 +14,10 @@ namespace App\Form;
 use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Defines the form used to create and manipulate blog comments. Although in this
@@ -29,6 +31,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class CommentType extends AbstractType
 {
+    private Security $security;
+
+    public function __construct(Security $security) {
+        $this->security = $security;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,6 +47,18 @@ class CommentType extends AbstractType
         // server-side validation errors from the browser. To temporarily disable
         // this validation, set the 'required' attribute to 'false':
         // $builder->add('content', null, ['required' => false]);
+
+        $user = $this->security->getUser();
+
+        if(is_null($user)) {
+            $builder
+                ->add('anonymousUser', TextType::class, [
+                    'label' => 'Name',
+                    'help' => 'help.comment_name',
+                    'validation_groups' => ['not_logged'],
+                ])
+            ;
+        }
 
         $builder
             ->add('content', TextareaType::class, [
@@ -54,6 +74,7 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Comment::class,
+            'csrf_protection' => false,
         ]);
     }
 }
