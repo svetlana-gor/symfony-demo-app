@@ -13,6 +13,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use App\Entity\PostTranslation;
 use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -73,13 +74,14 @@ class AppFixtures extends Fixture
     {
         foreach ($this->getPostData() as [$title, $slug, $summary, $content, $publishedAt, $author, $tags]) {
             $post = new Post();
-            $post->setTitle($title);
             $post->setSlug($slug);
-            $post->setSummary($summary);
-            $post->setContent($content);
             $post->setPublishedAt($publishedAt);
             $post->setAuthor($author);
             $post->addTag(...$tags);
+
+            $post->translate('en')->setTitle($title);
+            $post->translate('en')->setSummary($summary);
+            $post->translate('en')->setContent($content);
 
             foreach (range(1, 5) as $i) {
                 $comment = new Comment();
@@ -91,6 +93,7 @@ class AppFixtures extends Fixture
             }
 
             $manager->persist($post);
+            $post->mergeNewTranslations();
         }
 
         $manager->flush();

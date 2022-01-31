@@ -15,12 +15,12 @@ use App\Entity\Post;
 use App\Form\Type\DateTimePickerType;
 use App\Form\Type\TagsInputType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use A2lix\TranslationFormBundle\Form\Type\TranslationsType;
 
 /**
  * Defines the form used to create and manipulate blog posts.
@@ -52,21 +52,8 @@ class PostType extends AbstractType
         // server-side validation errors from the browser. To temporarily disable
         // this validation, set the 'required' attribute to 'false':
         // $builder->add('title', null, ['required' => false, ...]);
-
         $builder
-            ->add('title', null, [
-                'attr' => ['autofocus' => true],
-                'label' => 'label.title',
-            ])
-            ->add('summary', TextareaType::class, [
-                'help' => 'help.post_summary',
-                'label' => 'label.summary',
-            ])
-            ->add('content', null, [
-                'attr' => ['rows' => 20],
-                'help' => 'help.post_content',
-                'label' => 'label.content',
-            ])
+            ->add('translations', TranslationsType::class)
             ->add('publishedAt', DateTimePickerType::class, [
                 'label' => 'label.published_at',
                 'help' => 'help.post_publication',

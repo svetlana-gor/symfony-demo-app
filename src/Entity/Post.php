@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
+use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
@@ -33,8 +35,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
-class Post
+class Post implements TranslatableInterface
 {
+    use TranslatableTrait;
+
     /**
      * @var int
      *
@@ -48,34 +52,8 @@ class Post
      * @var string
      *
      * @ORM\Column(type="string")
-     * @Assert\NotBlank
-     */
-    private $title;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
      */
     private $slug;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="post.blank_summary")
-     * @Assert\Length(max=255)
-     */
-    private $summary;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank(message="post.blank_content")
-     * @Assert\Length(min=10, minMessage="post.too_short_content")
-     */
-    private $content;
 
     /**
      * @var \DateTime
@@ -122,19 +100,14 @@ class Post
         $this->tags = new ArrayCollection();
     }
 
+    public function __call($method, $arguments)
+    {
+        return $this->proxyCurrentLocaleTranslation($method, $arguments);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(?string $title): void
-    {
-        $this->title = $title;
     }
 
     public function getSlug(): ?string
@@ -145,16 +118,6 @@ class Post
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-    }
-
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(?string $content): void
-    {
-        $this->content = $content;
     }
 
     public function getPublishedAt(): \DateTime
@@ -193,16 +156,6 @@ class Post
     public function removeComment(Comment $comment): void
     {
         $this->comments->removeElement($comment);
-    }
-
-    public function getSummary(): ?string
-    {
-        return $this->summary;
-    }
-
-    public function setSummary(?string $summary): void
-    {
-        $this->summary = $summary;
     }
 
     public function addTag(Tag ...$tags): void

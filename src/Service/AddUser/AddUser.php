@@ -32,7 +32,7 @@ class AddUser
         $anonymousUser->setUsername('anonymous_user');
         $anonymousUser->setPassword($this->passwordHasher->hashPassword($anonymousUser, 'CvaC6n57E5'));
         $anonymousUser->setEmail($anonymousUserEmail);
-        $anonymousUser->setRoles(['PUBLIC_ACCESS']);
+        $anonymousUser->setRoles(['ROLE_USER']);
 
         $em = $this->doctrine->getManager();
         $em->persist($anonymousUser);
