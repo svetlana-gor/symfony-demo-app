@@ -22,7 +22,7 @@ class PostTranslation implements TranslationInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
@@ -30,7 +30,7 @@ class PostTranslation implements TranslationInterface
      * @ORM\Column(type="string")
      * @Assert\NotBlank
      */
-    private $title;
+    private string $title;
 
     /**
      * @var string
@@ -39,7 +39,7 @@ class PostTranslation implements TranslationInterface
      * @Assert\NotBlank(message="post.blank_summary")
      * @Assert\Length(max=255)
      */
-    private $summary;
+    private string $summary;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class PostTranslation implements TranslationInterface
      * @Assert\NotBlank(message="post.blank_content")
      * @Assert\Length(min=10, minMessage="post.too_short_content")
      */
-    private $content;
+    private string $content;
 
     public function getId(): ?int
     {

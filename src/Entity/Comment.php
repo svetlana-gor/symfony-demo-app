@@ -12,6 +12,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use function Symfony\Component\String\u;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,7 +38,7 @@ class Comment
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var Post
@@ -45,7 +46,7 @@ class Comment
      * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $post;
+    private Post $post;
 
     /**
      * @var string
@@ -59,22 +60,22 @@ class Comment
      *     maxMessage="comment.too_long"
      * )
      */
-    private $content;
+    private string $content;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
      */
-    private $publishedAt;
+    private \DateTime $publishedAt;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $author;
+    private UserInterface $author;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -130,12 +131,12 @@ class Comment
         $this->publishedAt = $publishedAt;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): ?UserInterface
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): void
+    public function setAuthor(UserInterface $author): void
     {
         $this->author = $author;
     }

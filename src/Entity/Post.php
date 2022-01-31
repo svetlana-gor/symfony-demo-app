@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Contract\Entity\TranslatableInterface;
 use Knp\DoctrineBehaviors\Model\Translatable\TranslatableTrait;
@@ -46,29 +47,29 @@ class Post implements TranslatableInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string")
      */
-    private $slug;
+    private string $slug;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
      */
-    private $publishedAt;
+    private \DateTime $publishedAt;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $author;
+    private UserInterface $author;
 
     /**
      * @var Comment[]|Collection
@@ -81,7 +82,7 @@ class Post implements TranslatableInterface
      * )
      * @ORM\OrderBy({"publishedAt": "DESC"})
      */
-    private $comments;
+    private Collection $comments;
 
     /**
      * @var Tag[]|Collection
@@ -91,7 +92,7 @@ class Post implements TranslatableInterface
      * @ORM\OrderBy({"name": "ASC"})
      * @Assert\Count(max="4", maxMessage="post.too_many_tags")
      */
-    private $tags;
+    private Collection $tags;
 
     public function __construct()
     {
@@ -100,7 +101,7 @@ class Post implements TranslatableInterface
         $this->tags = new ArrayCollection();
     }
 
-    public function __call($method, $arguments)
+    public function __call($method, $arguments): mixed
     {
         return $this->proxyCurrentLocaleTranslation($method, $arguments);
     }
@@ -130,12 +131,12 @@ class Post implements TranslatableInterface
         $this->publishedAt = $publishedAt;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): ?UserInterface
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): void
+    public function setAuthor(UserInterface $author): void
     {
         $this->author = $author;
     }
