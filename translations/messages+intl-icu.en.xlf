@@ -84,6 +84,26 @@
                 <source>title.edit_post</source>
                 <target>Edit post #{id, number}</target>
             </trans-unit>
+            <trans-unit id="Translations">
+                <source>Translations</source>
+                <target>Translations</target>
+            </trans-unit>
+            <trans-unit id="Default">
+                <source>[Default]</source>
+                <target>[Default]</target>
+            </trans-unit>
+            <trans-unit id="Title">
+                <source>Title</source>
+                <target>Title</target>
+            </trans-unit>
+            <trans-unit id="Summary">
+                <source>Summary</source>
+                <target>Summary</target>
+            </trans-unit>
+            <trans-unit id="Content">
+                <source>Content</source>
+                <target>Content</target>
+            </trans-unit>
             <trans-unit id="title.add_comment">
                 <source>title.add_comment</source>
                 <target>Add a comment</target>
