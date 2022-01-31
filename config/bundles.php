@@ -18,4 +18,6 @@ return [
     HtmlSanitizer\Bundle\HtmlSanitizerBundle::class => ['all' => true],
     JMS\TranslationBundle\JMSTranslationBundle::class => ['all' => true],
     Knp\DoctrineBehaviors\DoctrineBehaviorsBundle::class => ['all' => true],
+    A2lix\AutoFormBundle\A2lixAutoFormBundle::class => ['all' => true],
+    A2lix\TranslationFormBundle\A2lixTranslationFormBundle::class => ['all' => true],
 ];
